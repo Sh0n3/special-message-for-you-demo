@@ -1,9 +1,14 @@
+using DbManagment.Context;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddDbContext<DbContextSMFY>(options => {
+	options.UseNpgsql(builder.Configuration["ConnectionStrings:SMFY"]);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
