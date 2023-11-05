@@ -1,4 +1,5 @@
 using DbManagment.Context;
+using DbManagment.GraphQLService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DbContextSMFY>(options => {
 	options.UseNpgsql(builder.Configuration["ConnectionStrings:SMFY"]);
 });
+builder.Services.AddGraphQLServer().AddQueryType<Query>().AddProjections().AddFiltering().AddSorting();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,11 +25,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
+app.MapGraphQL("/graphql");
 
 app.Run();
