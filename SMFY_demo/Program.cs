@@ -1,5 +1,7 @@
 using DbManagment.Context;
+using DbManagment.Entities;
 using DbManagment.GraphQLService;
+using DbManagment.Schema;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +12,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DbContextSMFY>(options => {
 	options.UseNpgsql(builder.Configuration["ConnectionStrings:SMFY"]);
 });
-builder.Services.AddGraphQLServer().AddQueryType<Query>().AddProjections().AddFiltering().AddSorting();
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddGraphQLServer()
+	.AddQueryType<Query>()
+	.AddMutationType<Mutation>()
+	.AddProjections()
+	.AddFiltering()
+	.AddSorting();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,7 +31,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseWebSockets();
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller}/{action=Index}/{id?}");

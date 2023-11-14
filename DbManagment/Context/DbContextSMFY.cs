@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DbManagment.Context
 {
-	public class DbContextSMFY : DbContext
+    public class DbContextSMFY : DbContext
 	{
         public DbContextSMFY(DbContextOptions<DbContextSMFY> options) : base(options)
         {
@@ -21,6 +21,7 @@ namespace DbManagment.Context
         {
             modelBuilder.Entity<User>(entity =>
             {
+                entity.ToTable("Users");
                 entity.HasKey(user => user.UserID);
                 entity.Property(user => user.UserID).ValueGeneratedOnAdd();
             });
