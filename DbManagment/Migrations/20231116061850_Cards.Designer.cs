@@ -3,6 +3,7 @@ using System;
 using DbManagment.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbManagment.Migrations
 {
     [DbContext(typeof(DbContextSMFY))]
-    partial class DbContextSMFYModelSnapshot : ModelSnapshot
+    [Migration("20231116061850_Cards")]
+    partial class Cards
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +42,6 @@ namespace DbManagment.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("CardTemplateID")
-                        .HasColumnType("integer");
-
                     b.Property<string>("CardText")
                         .IsRequired()
                         .HasColumnType("text");
@@ -54,8 +54,6 @@ namespace DbManagment.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("CardID");
-
-                    b.HasIndex("CardTemplateID");
 
                     b.HasIndex("UserID");
 
@@ -92,27 +90,6 @@ namespace DbManagment.Migrations
                     b.ToTable("CardImages", (string)null);
                 });
 
-            modelBuilder.Entity("DbManagment.Entities.CardTemplate", b =>
-                {
-                    b.Property<int>("CardTemplateID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CardTemplateID"));
-
-                    b.Property<string>("CardTemplateContent")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CardTemplateName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("CardTemplateID");
-
-                    b.ToTable("CardTemplates", (string)null);
-                });
-
             modelBuilder.Entity("DbManagment.Entities.User", b =>
                 {
                     b.Property<int>("UserID")
@@ -140,19 +117,11 @@ namespace DbManagment.Migrations
 
             modelBuilder.Entity("DbManagment.Entities.Card", b =>
                 {
-                    b.HasOne("DbManagment.Entities.CardTemplate", "CardTemplate")
-                        .WithMany("Cards")
-                        .HasForeignKey("CardTemplateID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DbManagment.Entities.User", "User")
                         .WithMany("Cards")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CardTemplate");
 
                     b.Navigation("User");
                 });
@@ -171,11 +140,6 @@ namespace DbManagment.Migrations
             modelBuilder.Entity("DbManagment.Entities.Card", b =>
                 {
                     b.Navigation("CardImages");
-                });
-
-            modelBuilder.Entity("DbManagment.Entities.CardTemplate", b =>
-                {
-                    b.Navigation("Cards");
                 });
 
             modelBuilder.Entity("DbManagment.Entities.User", b =>

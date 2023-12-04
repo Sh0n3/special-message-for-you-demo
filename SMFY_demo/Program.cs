@@ -1,7 +1,8 @@
 using DbManagment.Context;
 using DbManagment.Entities;
-using DbManagment.GraphQLService;
-using DbManagment.Schema;
+using DbManagment.Repositories;
+using DbManagment.Schema.Mutation;
+using DbManagment.Schema.Query;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,10 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<DbContextSMFY>(options => {
+builder.Services.AddPooledDbContextFactory<DbContextSMFY>(options => {
 	options.UseNpgsql(builder.Configuration["ConnectionStrings:SMFY"]);
 });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<CardRepository>();
+builder.Services.AddScoped<CardImageRepository>();
+builder.Services.AddScoped<CardTemplateRepository>();
 builder.Services.AddGraphQLServer()
 	.AddQueryType<Query>()
 	.AddMutationType<Mutation>()
@@ -31,7 +36,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseWebSockets();
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller}/{action=Index}/{id?}");
