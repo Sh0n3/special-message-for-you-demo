@@ -72,11 +72,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "SMFY_demo:build:production"
+              "buildTarget": "SMFY_demo:build:production"
             },
             "development": {
-              "browserTarget": "SMFY_demo:build:development",
-              "proxyConfig": "proxy.conf.js"
+              "proxyConfig": "proxy.conf.js",
+              "buildTarget": "SMFY_demo:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "SMFY_demo:build"
+            "buildTarget": "SMFY_demo:build"
           }
         },
         "test": {
